@@ -729,6 +729,16 @@
         text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
         font-size: 22px;
       }
+
+      .invite-title {
+        font-size: 18px;
+        letter-spacing: 3px;
+      }
+
+      .invite-tag {
+        font-size: 9px;
+        letter-spacing: 3px;
+      }
     }
   </style>
 
@@ -1017,63 +1027,29 @@
     };
 
     window.addToCalendar = function () {
-      const ua = navigator.userAgent || '';
-      const isIOS = /iphone|ipad|ipod/i.test(ua);
-
-      const gcalBase = 'https://www.google.com/calendar/render?action=TEMPLATE';
-      const mainLink = gcalBase +
-        '&text=' + encodeURIComponent("Sedy's Birthday & Graduation Lunch") +
-        '&dates=20260531T100000Z/20260531T160000Z' +
-        '&details=' + encodeURIComponent("You are cordially invited to Sedy's Birthday & Graduation Lunch!\n\nBYOB - Bring Your Own Bottle!\n\nFor inquiries: 072 496 6444") +
-        '&location=' + encodeURIComponent('9 Swaeltjie Street, Fauna, Bloemfontein') +
-        '&sf=true&output=xml';
-
-      if (isIOS) {
-        // iPhone - download .ics which iOS Calendar opens automatically
-        const ics = [
-          'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Sedy//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH',
-          'BEGIN:VEVENT','UID:sedy-main@invite','DTSTAMP:20260426T000000Z',
-          'DTSTART:20260531T100000Z','DTEND:20260531T160000Z',
-          'SUMMARY:Sedy Birthday & Graduation Lunch',
-          'DESCRIPTION:BYOB - Bring Your Own Bottle! For inquiries: 072 496 6444',
-          'LOCATION:9 Swaeltjie Street\, Fauna\, Bloemfontein',
-          'BEGIN:VALARM','TRIGGER:-PT2H','ACTION:DISPLAY','DESCRIPTION:Sedy Lunch starts in 2 hours - BYOB!','END:VALARM',
-          'BEGIN:VALARM','TRIGGER:-PT5H','ACTION:DISPLAY','DESCRIPTION:Sedy Lunch is today at noon!','END:VALARM',
-          'END:VEVENT',
-          'BEGIN:VEVENT','UID:sedy-r1@invite','DTSTART:20260502T080000Z','DTEND:20260502T080500Z','SUMMARY:Reminder: Sedy Lunch in 4 weeks!','BEGIN:VALARM','TRIGGER:-PT0M','ACTION:DISPLAY','DESCRIPTION:Sedy Lunch in 4 weeks - 31 May at noon!','END:VALARM','END:VEVENT',
-          'BEGIN:VEVENT','UID:sedy-r2@invite','DTSTART:20260509T080000Z','DTEND:20260509T080500Z','SUMMARY:Reminder: Sedy Lunch in 3 weeks!','BEGIN:VALARM','TRIGGER:-PT0M','ACTION:DISPLAY','DESCRIPTION:Sedy Lunch in 3 weeks - 31 May at noon!','END:VALARM','END:VEVENT',
-          'BEGIN:VEVENT','UID:sedy-r3@invite','DTSTART:20260516T080000Z','DTEND:20260516T080500Z','SUMMARY:Reminder: Sedy Lunch in 2 weeks!','BEGIN:VALARM','TRIGGER:-PT0M','ACTION:DISPLAY','DESCRIPTION:Sedy Lunch in 2 weeks - 31 May at noon!','END:VALARM','END:VEVENT',
-          'BEGIN:VEVENT','UID:sedy-r4@invite','DTSTART:20260523T080000Z','DTEND:20260523T080500Z','SUMMARY:Reminder: Sedy Lunch NEXT SUNDAY!','BEGIN:VALARM','TRIGGER:-PT0M','ACTION:DISPLAY','DESCRIPTION:Sedy Lunch is NEXT SUNDAY - 31 May at noon!','END:VALARM','END:VEVENT',
-          'END:VCALENDAR'
-        ].join('\r\n');
-        const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-        const url  = URL.createObjectURL(blob);
-        const a    = document.createElement('a');
-        a.href = url; a.download = 'SedysLunch.ics';
-        document.body.appendChild(a); a.click();
-        document.body.removeChild(a); URL.revokeObjectURL(url);
-      } else {
-        // Android + Desktop - open Google Calendar directly
-        window.open(mainLink, '_blank');
-      }
-
-      // Show Saturday reminder links after 800ms
-      setTimeout(() => {
-        const div = document.getElementById('reminder-links');
-        if (!div) return;
-        const reminders = [
-          ['20260502T080000Z/20260502T080500Z', 'Sat 2 May — 4 weeks away'],
-          ['20260509T080000Z/20260509T080500Z', 'Sat 9 May — 3 weeks away'],
-          ['20260516T080000Z/20260516T080500Z', 'Sat 16 May — 2 weeks away'],
-          ['20260523T080000Z/20260523T080500Z', 'Sat 23 May — 1 week away'],
-        ];
-        div.innerHTML = '<p style="font-family:Montserrat,sans-serif;font-size:9px;color:rgba(140,195,255,0.65);letter-spacing:2px;text-transform:uppercase;margin:12px 0 6px;">Add weekly reminders:</p>' +
-          reminders.map(([dates, label]) => {
-            const link = gcalBase + '&text=' + encodeURIComponent('Reminder: Sedy Lunch — ' + label) +
-              '&dates=' + dates + '&details=' + encodeURIComponent("Don't forget — Sedy's Lunch is Sunday 31 May at noon!\n9 Swaeltjie Street, Fauna\nBYOB!") + '&sf=true&output=xml';
-            return '<a href="' + link + '" target="_blank" style="display:block;margin:4px 0;padding:8px 14px;background:rgba(40,80,180,0.4);border:0.5px solid rgba(120,175,255,0.3);border-radius:20px;color:rgba(180,215,255,0.9);font-family:Montserrat,sans-serif;font-size:9px;letter-spacing:1px;text-decoration:none;">+ ' + label + '</a>';
-          }).join('');
-      }, 800);
+      // Works on ALL phones - iPhone, Samsung, Android, Desktop
+      const ics = [
+        'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Sedy//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH',
+        'BEGIN:VEVENT','UID:sedy-main@invite','DTSTAMP:20260426T000000Z',
+        'DTSTART:20260531T100000Z','DTEND:20260531T160000Z',
+        'SUMMARY:Sedy Birthday & Graduation Lunch',
+        'DESCRIPTION:BYOB - Bring Your Own Bottle! For inquiries: 072 496 6444',
+        'LOCATION:9 Swaeltjie Street\\, Fauna\\, Bloemfontein',
+        'BEGIN:VALARM','TRIGGER:-PT2H','ACTION:DISPLAY','DESCRIPTION:Sedy Lunch starts in 2 hours - BYOB!','END:VALARM',
+        'BEGIN:VALARM','TRIGGER:-PT5H','ACTION:DISPLAY','DESCRIPTION:Sedy Lunch is today at noon!','END:VALARM',
+        'END:VEVENT',
+        'BEGIN:VEVENT','UID:sedy-r1@invite','DTSTART:20260502T080000Z','DTEND:20260502T080500Z','SUMMARY:Reminder: Sedy Lunch in 4 weeks!','BEGIN:VALARM','TRIGGER:-PT0M','ACTION:DISPLAY','DESCRIPTION:Sedy Lunch in 4 weeks - 31 May at noon!','END:VALARM','END:VEVENT',
+        'BEGIN:VEVENT','UID:sedy-r2@invite','DTSTART:20260509T080000Z','DTEND:20260509T080500Z','SUMMARY:Reminder: Sedy Lunch in 3 weeks!','BEGIN:VALARM','TRIGGER:-PT0M','ACTION:DISPLAY','DESCRIPTION:Sedy Lunch in 3 weeks - 31 May at noon!','END:VALARM','END:VEVENT',
+        'BEGIN:VEVENT','UID:sedy-r3@invite','DTSTART:20260516T080000Z','DTEND:20260516T080500Z','SUMMARY:Reminder: Sedy Lunch in 2 weeks!','BEGIN:VALARM','TRIGGER:-PT0M','ACTION:DISPLAY','DESCRIPTION:Sedy Lunch in 2 weeks - 31 May at noon!','END:VALARM','END:VEVENT',
+        'BEGIN:VEVENT','UID:sedy-r4@invite','DTSTART:20260523T080000Z','DTEND:20260523T080500Z','SUMMARY:Reminder: Sedy Lunch NEXT SUNDAY!','BEGIN:VALARM','TRIGGER:-PT0M','ACTION:DISPLAY','DESCRIPTION:Sedy Lunch is NEXT SUNDAY - 31 May at noon!','END:VALARM','END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
+      const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url; a.download = 'SedysLunch.ics';
+      document.body.appendChild(a); a.click();
+      document.body.removeChild(a); URL.revokeObjectURL(url);
     };
 
     window.checkAdmin = function () {
